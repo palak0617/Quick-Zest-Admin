@@ -1,0 +1,32 @@
+# Render Blueprint — deploys the QuickZest API (Express) from the /server folder.
+# In Render: New + → Blueprint → pick this repo. You'll be asked for the values marked sync:false.
+services:
+  - type: web
+    name: QuickZest-api
+    runtime: node
+    plan: free
+    region: singapore          # closest Render region to India
+    rootDir: server
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TZ
+        value: Asia/Kolkata
+      - key: SESSION_HOURS
+        value: "12"
+      - key: JWT_SECRET
+        generateValue: true     # Render creates a strong random secret. Never change it: it also unlocks the 2FA keys.
+      - key: MONGODB_URI        # from MongoDB Atlas → Connect → Drivers
+        sync: false
+      - key: CLIENT_URL         # your Vercel URL, e.g. https://QuickZest-admin.vercel.app
+        sync: false
+      - key: ADMIN_NAME
+        sync: false
+      - key: ADMIN_EMAIL        # login email
+        sync: false
+      - key: ADMIN_PASSWORD     # first login password (8+ chars); change it later in Settings
+        sync: false
